@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class DateRange {
+public class DateRangeDTO {
     @NotNull
     LocalDate from;
     @NotNull

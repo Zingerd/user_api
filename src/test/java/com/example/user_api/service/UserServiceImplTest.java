@@ -1,8 +1,8 @@
 package com.example.user_api.service;
 
-import com.example.user_api.dto.DateRange;
-import com.example.user_api.dto.UserRq;
-import com.example.user_api.dto.UserRs;
+import com.example.user_api.dto.DateRangeDTO;
+import com.example.user_api.dto.UserRequestDTO;
+import com.example.user_api.dto.UserResponseDTO;
 import com.example.user_api.entity.User;
 import com.example.user_api.repository.UserRepository;
 import com.example.user_api.service.impl.UserServiceImpl;
@@ -42,7 +42,7 @@ public class UserServiceImplTest {
 
     @Test
     void testCreateUser() {
-        UserRq userRq = buildUserRq();
+        UserRequestDTO userRq = buildUserRq();
         User user = buildUser();
 
         when(modelMapper.map(userRq, User.class)).thenReturn(user);
@@ -58,7 +58,7 @@ public class UserServiceImplTest {
 
     @Test
     void testUpdateUserFields() {
-        UserRq userRq = buildUserRq();
+        UserRequestDTO userRq = buildUserRq();
         User user = buildUser();
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
@@ -75,7 +75,7 @@ public class UserServiceImplTest {
     @Test
     void testUpdateUserFields_UserNotFound() {
         Long userId = 1L;
-        UserRq userRq = buildUserRq();
+        UserRequestDTO userRq = buildUserRq();
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -84,7 +84,7 @@ public class UserServiceImplTest {
 
     @Test
     void testUpdateAllUserFields() {
-        UserRq userRq = buildUserRq();
+        UserRequestDTO userRq = buildUserRq();
         User user = buildUser();
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
@@ -101,7 +101,7 @@ public class UserServiceImplTest {
     @Test
     void testUpdateAllUserFields_UserNotFound() {
         Long userId = 1L;
-        UserRq userRq = buildUserRq();
+        UserRequestDTO userRq = buildUserRq();
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> userService.updateAllUserFields(userId, userRq));
@@ -125,18 +125,18 @@ public class UserServiceImplTest {
 
     @Test
     void testFindUsersByBirthDateRange() {
-        DateRange dateRange = new DateRange();
+        DateRangeDTO dateRange = new DateRangeDTO();
         dateRange.setFrom(LocalDate.of(1990, 1, 1));
         dateRange.setTo(LocalDate.of(2024, 1, 1));
 
         when(userRepository.findByBirthDateBetween(any(), any())).thenReturn(List.of(buildUser()));
-        List<UserRs> result = userService.findUsersByBirthDateRange(dateRange);
+        List<UserResponseDTO> result = userService.findUsersByBirthDateRange(dateRange);
 
         assertEquals(1, result.size());
     }
 
-    private UserRq buildUserRq() {
-        UserRq userRq = new UserRq();
+    private UserRequestDTO buildUserRq() {
+        UserRequestDTO userRq = new UserRequestDTO();
         userRq.setFirstName("Mark");
         userRq.setLastName("Braun");
         userRq.setEmail("email@gmail.com");

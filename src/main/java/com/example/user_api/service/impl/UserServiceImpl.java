@@ -1,8 +1,8 @@
 package com.example.user_api.service.impl;
 
-import com.example.user_api.dto.DateRange;
-import com.example.user_api.dto.UserRq;
-import com.example.user_api.dto.UserRs;
+import com.example.user_api.dto.DateRangeDTO;
+import com.example.user_api.dto.UserRequestDTO;
+import com.example.user_api.dto.UserResponseDTO;
 import com.example.user_api.entity.User;
 import com.example.user_api.repository.UserRepository;
 import com.example.user_api.service.UserService;
@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.user_api.tools.Convertor.convertListUserToListUserRs;
-import static com.example.user_api.tools.Convertor.convertUserRqToUser;
-import static com.example.user_api.tools.Convertor.convertUserToUserRq;
-import static com.example.user_api.tools.Convertor.convertUserToUserRs;
-
+import static com.example.user_api.tools.Convertor.convertListUserToListUserResponseDTO;
+import static com.example.user_api.tools.Convertor.convertUserRequestDTOToUser;
+import static com.example.user_api.tools.Convertor.convertUserToUserRequestDTO;
+import static com.example.user_api.tools.Convertor.convertUserToUserResponseDTO;
 
 @Service
 @Log4j2
@@ -32,31 +31,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRq createUser(UserRq userRq) {
+    public UserRequestDTO createUser(UserRequestDTO userRq) {
         log.info("Create user");
-        userRepository.save(convertUserRqToUser(userRq, modelMapper));
+        userRepository.save(convertUserRequestDTOToUser(userRq, modelMapper));
         return userRq;
     }
 
     @Override
-    public UserRq updateUserFields(Long id, UserRq userRq) {
+    public UserRequestDTO updateUserFields(Long id, UserRequestDTO userRq) {
         log.info("update user field");
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
         updateUser(userRq, user);
         userRepository.save(user);
-        return convertUserToUserRq(user, modelMapper);
+        return convertUserToUserRequestDTO(user, modelMapper);
     }
 
     @Override
-    public UserRs updateAllUserFields(Long id, UserRq userRq) {
+    public UserResponseDTO updateAllUserFields(Long id, UserRequestDTO userRq) {
         log.info("update all user field");
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
         updateFildsExitsUser(user, userRq);
         userRepository.save(user);
-        return convertUserToUserRs(user, modelMapper);
+        return convertUserToUserResponseDTO(user, modelMapper);
     }
 
     @Override
@@ -69,14 +68,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRs> findUsersByBirthDateRange(DateRange dateRange) {
+    public List<UserResponseDTO> findUsersByBirthDateRange(DateRangeDTO dateRange) {
         log.info("find user by birthday range");
         List<User> userList = userRepository.findByBirthDateBetween(dateRange.getFrom(), dateRange.getTo());
 
-        return convertListUserToListUserRs(userList, modelMapper);
+        return convertListUserToListUserResponseDTO(userList, modelMapper);
     }
 
-    private void updateUser(UserRq userRq, User user) {
+    private void updateUser(UserRequestDTO userRq, User user) {
         if (userRq.getFirstName() != null) {
             user.setFirstName(user.getFirstName());
         }
@@ -94,7 +93,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User updateFildsExitsUser(User user, UserRq userRq) {
+    private User updateFildsExitsUser(User user, UserRequestDTO userRq) {
         user.setAddress(userRq.getAddress());
         user.setLastName(userRq.getLastName());
         user.setBirthDate(userRq.getBirthDate());

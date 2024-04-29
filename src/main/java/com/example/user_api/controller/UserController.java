@@ -1,8 +1,8 @@
 package com.example.user_api.controller;
 
-import com.example.user_api.dto.DateRange;
-import com.example.user_api.dto.UserRq;
-import com.example.user_api.dto.UserRs;
+import com.example.user_api.dto.DateRangeDTO;
+import com.example.user_api.dto.UserRequestDTO;
+import com.example.user_api.dto.UserResponseDTO;
 import com.example.user_api.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -44,7 +44,7 @@ public class UserController {
     @Operation(
             summary = "Create user")
     @PostMapping
-    public ResponseEntity<UserRq> createUser(@Valid @RequestBody UserRq userRq) {
+    public ResponseEntity<UserRequestDTO> createUser(@Valid @RequestBody UserRequestDTO userRq) {
         verificationOfPersonMajority(userRq, minimumAge);
         return ResponseEntity.ok(userService.createUser(userRq));
     }
@@ -59,7 +59,7 @@ public class UserController {
     @Operation(
             summary = "Method partial update user")
     @PatchMapping("/{id}")
-    public ResponseEntity<UserRq> updateUserFields(@PathVariable Long id, @RequestBody UserRq userRq) {
+    public ResponseEntity<UserRequestDTO> updateUserFields(@PathVariable Long id, @RequestBody UserRequestDTO userRq) {
         verificationOfPersonMajority(userRq, minimumAge);
         return ResponseEntity.ok(userService.updateUserFields(id, userRq));
     }
@@ -72,7 +72,7 @@ public class UserController {
      * @return ResponseEntity<UserRq> response with update user
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UserRs> updateAllUserFields(@PathVariable Long id, @Valid @RequestBody UserRq userRq) {
+    public ResponseEntity<UserResponseDTO> updateAllUserFields(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRq) {
         verificationOfPersonMajority(userRq, minimumAge);
         return ResponseEntity.ok(userService.updateAllUserFields(id, userRq));
     }
@@ -99,9 +99,9 @@ public class UserController {
     @Operation(
             summary = "Method search user by birthdate range")
     @PostMapping("/search")
-    public ResponseEntity<List<UserRs>> searchUsersByBirthDateRange(@RequestBody DateRange dateRange) {
+    public ResponseEntity<List<UserResponseDTO>> searchUsersByBirthDateRange(@RequestBody DateRangeDTO dateRange) {
         verificationCorrectRange(dateRange);
-        List<UserRs> users = userService.findUsersByBirthDateRange(dateRange);
+        List<UserResponseDTO> users = userService.findUsersByBirthDateRange(dateRange);
         return ResponseEntity.ok(users);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.user_api.controller;
-import com.example.user_api.dto.DateRange;
-import com.example.user_api.dto.UserRq;
+import com.example.user_api.dto.DateRangeDTO;
+import com.example.user_api.dto.UserRequestDTO;
 import com.example.user_api.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class UserControllerTest {
                         .content("{ \"firstName\": \"John\", \"lastName\": \"Doe\",\"email\":\"email@gmail.com\", \"birthDate\": \"1990-01-01\", \"address\": \"123 Main St\", \"phoneNumber\": \"123456789\" }"))
                 .andExpect(status().isOk());
 
-        verify(userService).createUser(any(UserRq.class));
+        verify(userService).createUser(any(UserRequestDTO.class));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class UserControllerTest {
                         .content("{ \"firstName\": \"John\", \"lastName\": \"Doe\",\"email\":\"email@gmail.com\", \"birthDate\": \"1990-01-01\", \"address\": \"123 Main St\", \"phoneNumber\": \"123456789\" }"))
                 .andExpect(status().isOk());
 
-        verify(userService).updateUserFields(eq(1L), any(UserRq.class));
+        verify(userService).updateUserFields(eq(1L), any(UserRequestDTO.class));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class UserControllerTest {
                         .content("{ \"firstName\": \"John\", \"lastName\": \"Doe\",\"email\":\"email@gmail.com\", \"birthDate\": \"1990-01-01\", \"address\": \"123 Main St\", \"phoneNumber\": \"123456789\" }"))
                 .andExpect(status().isOk());
 
-        verify(userService).updateAllUserFields(eq(1L), any(UserRq.class));
+        verify(userService).updateAllUserFields(eq(1L), any(UserRequestDTO.class));
     }
 
     @Test
@@ -70,14 +70,14 @@ public class UserControllerTest {
 
     @Test
     void testSearchUsersByBirthDateRange() throws Exception {
-        when(userService.findUsersByBirthDateRange(any(DateRange.class))).thenReturn(Collections.emptyList());
+        when(userService.findUsersByBirthDateRange(any(DateRangeDTO.class))).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user/search")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"from\": \"1990-01-01\", \"to\": \"2024-01-01\" }"))
                 .andExpect(status().isOk());
 
-        verify(userService).findUsersByBirthDateRange(any(DateRange.class));
+        verify(userService).findUsersByBirthDateRange(any(DateRangeDTO.class));
     }
 }
 

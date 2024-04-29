@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-public class UserRq {
+public class UserRequestDTO {
     @Email
     @NotBlank
     private String email;

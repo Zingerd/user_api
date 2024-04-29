@@ -1,20 +1,20 @@
 package com.example.user_api.service;
 
-import com.example.user_api.dto.DateRange;
-import com.example.user_api.dto.UserRq;
-import com.example.user_api.dto.UserRs;
+import com.example.user_api.dto.DateRangeDTO;
+import com.example.user_api.dto.UserRequestDTO;
+import com.example.user_api.dto.UserResponseDTO;
 
 import java.util.List;
 
 public interface UserService {
 
-    public UserRq createUser(UserRq userRq);
+    public UserRequestDTO createUser(UserRequestDTO userRq);
 
-    public UserRq updateUserFields(Long id, UserRq userRq);
+    public UserRequestDTO updateUserFields(Long id, UserRequestDTO userRq);
 
-    public UserRs updateAllUserFields(Long id, UserRq userRq);
+    public UserResponseDTO updateAllUserFields(Long id, UserRequestDTO userRq);
 
     public String deleteUser(Long id);
 
-    public List<UserRs> findUsersByBirthDateRange(DateRange dateRange);
+    public List<UserResponseDTO> findUsersByBirthDateRange(DateRangeDTO dateRange);
 }
